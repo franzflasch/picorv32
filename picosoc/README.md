@@ -1,7 +1,7 @@
-# This is a modified version of the original project of cliffordwolf.
-# It is intended for the Olimex ICE40HX8k board and uses the external ram 
-# as main memory. The Picosoc core can therefore use the full 512KB memory.
-# The internal 1KB scratchpad memory is still there, but is not used anymore.
+## This is a modified version of the original project of cliffordwolf. 
+## It is intended for the Olimex ICE40HX8k board and uses the external ram as main memory. 
+## The Picosoc core can therefore use the full 512KB memory.
+## The internal 1KB scratchpad memory is still there, but is not used anymore.
 
 ## I've used the hx8kdemo project and modified it for my needs.
 
