@@ -5,10 +5,7 @@ hx8ksim: hx8kdemo_tb.vvp hx8kdemo_fw.hex
 	vvp -N $< +firmware=hx8kdemo_fw.hex
 
 hx8ksynsim: hx8kdemo_syn_tb.vvp hx8kdemo_fw.hex
-	vvp -N $< +firmware=hx8kdemo_fw.hex 
-
-hx8kdemo.blif: hx8kdemo.v spimemio.v simpleuart.v picosoc.v ../picorv32.v
-	yosys -ql hx8kdemo.log -p 'synth_ice40 -top hx8kdemo -blif hx8kdemo.blif' $^
+	vvp -N $< +firmware=hx8kdemo_fw.hex
 
 hx8kdemo_tb.vvp: hx8kdemo_tb.v hx8kdemo.v spimemio.v simpleuart.v picosoc.v ../picorv32.v spiflash.v
 	iverilog -s testbench -o $@ $^ `yosys-config --datdir/ice40/cells_sim.v`
@@ -16,14 +13,26 @@ hx8kdemo_tb.vvp: hx8kdemo_tb.v hx8kdemo.v spimemio.v simpleuart.v picosoc.v ../p
 hx8kdemo_syn_tb.vvp: hx8kdemo_tb.v hx8kdemo_syn.v spiflash.v
 	iverilog -s testbench -o $@ $^ `yosys-config --datdir/ice40/cells_sim.v`
 
-hx8kdemo_syn.v: hx8kdemo.blif
-	yosys -p 'read_blif -wideports hx8kdemo.blif; write_verilog hx8kdemo_syn.v'
+#hx8kdemo.blif: hx8kdemo.v spimemio.v simpleuart.v picosoc.v ../picorv32.v
+#	yosys -ql hx8kdemo.log -p 'synth_ice40 -top hx8kdemo -blif hx8kdemo.blif' $^
 
-hx8kdemo.asc: hx8kdemo.pcf hx8kdemo.blif
-	arachne-pnr -d 8k -o hx8kdemo.asc -p hx8kdemo.pcf hx8kdemo.blif
+#hx8kdemo_syn.v: hx8kdemo.blif
+#	yosys -p 'read_blif -wideports hx8kdemo.blif; write_verilog hx8kdemo_syn.v'
+
+#hx8kdemo.asc: hx8kdemo.pcf hx8kdemo.blif
+#	arachne-pnr -d 8k -o hx8kdemo.asc -p hx8kdemo.pcf hx8kdemo.blif
+
+hx8kdemo.json: hx8kdemo.v spimemio.v simpleuart.v picosoc.v ../picorv32.v
+	yosys -ql hx8kdemo.log -p 'synth_ice40 -top hx8kdemo -json hx8kdemo.json' $^
+
+hx8kdemo_syn.v: hx8kdemo.json
+	yosys -p 'read_json hx8kdemo.json; write_verilog hx8kdemo_syn.v'
+
+hx8kdemo.asc: hx8kdemo.pcf hx8kdemo.json
+	nextpnr-ice40 --freq 14 --pre-pack clock_constraint.py --hx8k --asc hx8kdemo.asc --pcf hx8kdemo.pcf --json hx8kdemo.json
 
 hx8kdemo.bin: hx8kdemo.asc
-	icetime -d hx8k -c 12 -mtr hx8kdemo.rpt hx8kdemo.asc
+	icetime -d hx8k -c 14 -mtr hx8kdemo.rpt hx8kdemo.asc
 	icepack hx8kdemo.asc hx8kdemo.bin
 
 hx8kprog: hx8kdemo.bin hx8kdemo_fw.bin
@@ -34,13 +43,13 @@ hx8kprog_fw: hx8kdemo_fw.bin
 	iceprog -o 1M hx8kdemo_fw.bin
 
 hx8kdemo_fw.elf: sections.lds start.s firmware.c
-	riscv32-unknown-elf-gcc -DHX8KDEMO -march=rv32imc -Wl,-Bstatic,-T,sections.lds,--strip-debug -ffreestanding -nostdlib -o hx8kdemo_fw.elf start.s firmware.c
+	riscv32-none-elf-gcc -DHX8KDEMO -march=rv32imc -Wl,-Bstatic,-T,sections.lds,--strip-debug -ffreestanding -nostdlib -o hx8kdemo_fw.elf start.s firmware.c
 
 hx8kdemo_fw.hex: hx8kdemo_fw.elf
-	riscv32-unknown-elf-objcopy -O verilog hx8kdemo_fw.elf hx8kdemo_fw.hex
+	riscv32-none-elf-objcopy -O verilog hx8kdemo_fw.elf hx8kdemo_fw.hex
 
 hx8kdemo_fw.bin: hx8kdemo_fw.elf
-	riscv32-unknown-elf-objcopy -O binary hx8kdemo_fw.elf hx8kdemo_fw.bin
+	riscv32-none-elf-objcopy -O binary hx8kdemo_fw.elf hx8kdemo_fw.bin
 
 # ---- iCE40 IceBreaker Board ----
 
@@ -77,13 +86,13 @@ icebprog_fw: icebreaker_fw.bin
 	iceprog -o 1M icebreaker_fw.bin
 
 icebreaker_fw.elf: sections.lds start.s firmware.c
-	riscv32-unknown-elf-gcc -DICEBREAKER -march=rv32ic -Wl,-Bstatic,-T,sections.lds,--strip-debug -ffreestanding -nostdlib -o icebreaker_fw.elf start.s firmware.c
+	riscv32-none-elf-gcc -DICEBREAKER -march=rv32ic -Wl,-Bstatic,-T,sections.lds,--strip-debug -ffreestanding -nostdlib -o icebreaker_fw.elf start.s firmware.c
 
 icebreaker_fw.hex: icebreaker_fw.elf
-	riscv32-unknown-elf-objcopy -O verilog icebreaker_fw.elf icebreaker_fw.hex
+	riscv32-none-elf-objcopy -O verilog icebreaker_fw.elf icebreaker_fw.hex
 
 icebreaker_fw.bin: icebreaker_fw.elf
-	riscv32-unknown-elf-objcopy -O binary icebreaker_fw.elf icebreaker_fw.bin
+	riscv32-none-elf-objcopy -O binary icebreaker_fw.elf icebreaker_fw.bin
 
 # ---- Testbench for SPI Flash Model ----
 

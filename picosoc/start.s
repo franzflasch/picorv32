@@ -3,7 +3,8 @@
 start:
 
 # zero-initialize register file
-addi x1, zero, 0
+addi x1, zero, 0 
+li sp, 0x4080000
 # x2 (sp) is initialized by reset
 addi x3, zero, 0
 addi x4, zero, 0
@@ -41,7 +42,7 @@ li a1, 1
 sw a1, 0(a0)
 
 # zero initialize entire scratchpad memory
-li a0, 0x00000000
+li a0, 0x04000000
 setmemloop:
 sw a0, 0(a0)
 addi a0, a0, 4

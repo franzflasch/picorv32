@@ -1,3 +1,27 @@
+# This is a modified version of the original project of cliffordwolf.
+# It is intended for the Olimex ICE40HX8k board and uses the external ram 
+# as main memory. The Picosoc core can therefore use the full 512KB memory.
+# The internal 1KB scratchpad memory is still there, but is not used anymore.
+
+## I've used the hx8kdemo project and modified it for my needs.
+
+### Prerequisites:
+Latest versions of:
+- yosys 
+- nextpnr 
+- icestorm 
+
+### Build with:
+```console 
+make hx8kdemo.bin 
+make hx8kdemo_fw.bin
+```
+
+### Program with:
+```console 
+sudo iceprog -d d:<busid>/<devid> hx8kdemo.bin 
+sudo iceprog -d d:<busid>/<devid> -o 1M hx8kdemo_fw.bin
+```
 
 PicoSoC - A simple example SoC using PicoRV32
 =============================================
@@ -45,14 +69,15 @@ and upload them to a connected iCEBreaker Board.
 
 ### Memory map:
 
-| Address Range            | Description                             |
-| ------------------------ | --------------------------------------- |
-| 0x00000000 .. 0x00FFFFFF | Internal SRAM                           |
-| 0x01000000 .. 0x01FFFFFF | External Serial Flash                   |
-| 0x02000000 .. 0x02000003 | SPI Flash Controller Config Register    |
-| 0x02000004 .. 0x02000007 | UART Clock Divider Register             |
-| 0x02000008 .. 0x0200000B | UART Send/Recv Data Register            |
-| 0x03000000 .. 0xFFFFFFFF | Memory mapped user peripherals          |
+| Address Range            | Description                                   |
+| ------------------------ | --------------------------------------------- |
+| 0x00000000 .. 0x00FFFFFF | Internal SRAM                                 |
+| 0x01000000 .. 0x01FFFFFF | External Serial Flash                         |
+| 0x02000000 .. 0x02000003 | SPI Flash Controller Config Register          |
+| 0x02000004 .. 0x02000007 | UART Clock Divider Register                   |
+| 0x02000008 .. 0x0200000B | UART Send/Recv Data Register                  |
+| 0x03000000 .. 0xFFFFFFFF | Memory mapped user peripherals                |
+| 0x04000000 .. 0x04080000 | External RAM of the Olimex ICE40HX8k (512 KB) |
 
 Reading from the addresses in the internal SRAM region beyond the end of the
 physical SRAM will read from the corresponding addresses in serial flash.

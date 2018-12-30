@@ -550,18 +550,75 @@ void cmd_benchmark_all()
 }
 #endif
 
+#ifdef HX8KDEMO
+void cmd_extram_test_print(void)
+{
+  int i = 0;
+  uint32_t volatile *ram_data=(uint32_t volatile*)0x04000000;
+
+  for(i=0;i<0x20000;i+=8)
+  {
+    print_hex(i, 4);
+    putchar(':');
+    print_hex(ram_data[i], 8);
+    putchar('\n');
+  }
+}
+
+void cmd_extram_test(void)
+{
+  int i = 0;
+  uint32_t volatile *ram_data=(uint32_t volatile*)0x04000000;
+
+  for(i=0;i<0x20000;i++)
+  {
+    if(ram_data[i] != i) 
+    {
+      print("Error on address:");
+      print_hex(i,4);
+      putchar(':');
+      print_hex(ram_data[i],8);
+      putchar('\n');
+    }
+  }
+}
+
+void cmd_extram_write_test(void)
+{
+  int i = 0;
+  uint8_t volatile *ram_data=(uint8_t volatile*)0x04000000;
+
+  for(i=0;i<0x20000;i++)
+  {
+    ram_data[i] = i%0xFF;
+  }
+}
+
+void cmd_extram_write_test32(void)
+{
+  int i = 0;
+  uint32_t volatile *ram_data=(uint32_t volatile*)0x04000000;
+
+  for(i=0;i<0x20000;i++)
+  {
+    ram_data[i] = i;
+  }
+}
+#endif
+
+
 // --------------------------------------------------------
 
 void main()
 {
 	reg_leds = 31;
-	reg_uart_clkdiv = 104;
+	reg_uart_clkdiv = 108;
 	print("Booting..\n");
 
 	reg_leds = 63;
 	set_flash_qspi_flag();
 
-	reg_leds = 127;
+	reg_leds = 64;
 	while (getchar_prompt("Press ENTER to continue..\n") != '\r') { /* wait */ }
 
 	print("\n");
@@ -611,6 +668,10 @@ void main()
 		print("   [7] Toggle continuous read mode\n");
 		print("   [9] Run simplistic benchmark\n");
 		print("   [0] Benchmark all configs\n");
+    print("   [a] Extram print test\n");
+    print("   [b] Extram write test\n");
+    print("   [c] Extram write test32\n");  
+    print("   [d] Extram test32\n");  
 		print("\n");
 
 		for (int rep = 10; rep > 0; rep--)
@@ -650,6 +711,18 @@ void main()
 			case '0':
 				cmd_benchmark_all();
 				break;
+			case 'a':
+				cmd_extram_test_print();
+				break;
+			case 'b':
+				cmd_extram_write_test();
+				break;
+ 			case 'c':
+				cmd_extram_write_test32();
+				break;
+ 			case 'd':
+				cmd_extram_test();
+				break;       
 			default:
 				continue;
 			}

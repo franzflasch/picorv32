@@ -11,30 +11,73 @@ set_io flash_io1 P11
 # for QSPI mode the flash chip on the iCE40-HX8K Breakout Board
 # must be replaced with one that supports QSPI and the IO2 and IO3
 # pins must be soldered to T9 and P8 (center on J3)
-set_io flash_io2 T9
-set_io flash_io3 P8
+set_io flash_io2 B6
+set_io flash_io3 C6
 
-set_io ser_tx B12
-set_io ser_rx B10
+set_io ser_tx E4
+set_io ser_rx B2
 
 # left on J3
-set_io debug_ser_tx T1
-set_io debug_ser_rx R3
+#set_io debug_ser_tx G3
+#set_io debug_ser_rx F3
 
 # right on J3
-set_io debug_flash_csb T15
-set_io debug_flash_clk R16
-set_io debug_flash_io0 N12
-set_io debug_flash_io1 P13
-set_io debug_flash_io2 T13
-set_io debug_flash_io3 T14
+#set_io debug_sys_clk H3
+#set_io debug_flash_csb F5
+#set_io debug_flash_clk B1
+#set_io debug_flash_io0 C1
+#set_io debug_flash_io1 C2
+#set_io debug_flash_io2 F4
+#set_io debug_flash_io3 D2
 
-set_io leds[7] B5  # D9
-set_io leds[6] B4  # D8
-set_io leds[5] A2  # D7
-set_io leds[4] A1  # D6
-set_io leds[3] C5  # D5
-set_io leds[2] C4  # D4
-set_io leds[1] B3  # D3
-set_io leds[0] C3  # D2
+set_io leds[0] M12  # D9
+set_io leds[1] R16  # D8
+#set_io leds[5] G5  # D7
+#set_io leds[4] D1  # D6
+#set_io leds[3] G4  # D5
+#set_io leds[2] E3  # D4
+#set_io leds[1] H5  # D3
+#set_io leds[0] E2  # D2
+
+set_io --warn-no-port DAT[0] T8
+set_io --warn-no-port DAT[1] P7
+set_io --warn-no-port DAT[2] N9
+set_io --warn-no-port DAT[3] T9
+set_io --warn-no-port DAT[4] M9
+set_io --warn-no-port DAT[5] R9
+set_io --warn-no-port DAT[6] K9
+set_io --warn-no-port DAT[7] P9
+set_io --warn-no-port DAT[8] R10
+set_io --warn-no-port DAT[9] L10
+set_io --warn-no-port DAT[10] P10
+set_io --warn-no-port DAT[11] N10
+set_io --warn-no-port DAT[12] T10
+set_io --warn-no-port DAT[13] T11
+set_io --warn-no-port DAT[14] T15
+set_io --warn-no-port DAT[15] T14
+
+set_io ADR[0] N6
+set_io ADR[1] T1
+set_io ADR[2] P4
+set_io ADR[3] R2
+set_io ADR[4] N5
+set_io ADR[5] T2
+set_io ADR[6] P5
+set_io ADR[7] R3
+set_io ADR[8] R5
+set_io ADR[9] T3
+set_io ADR[10] R4
+set_io ADR[11] M7
+set_io ADR[12] N7
+set_io ADR[13] P6
+set_io ADR[14] M8
+set_io ADR[15] T5
+set_io ADR[16] R6
+set_io ADR[17] P8
+
+set_io --warn-no-port RAMOE L9
+set_io --warn-no-port RAMWE T7
+set_io --warn-no-port RAMCS T6
+
+
 
