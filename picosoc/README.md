@@ -1,10 +1,13 @@
 ## This is a modified version of the original project of cliffordwolf. 
-## It is intended for the Olimex ICE40HX8k board and uses the external ram as main memory. 
-## The Picosoc core can therefore use the full 512KB memory.
-## The internal 1KB scratchpad memory is still there, but is not used anymore.
+### It is intended for the Olimex ICE40HX8k board and uses the external ram as main memory. 
+### The Picosoc core can now use the full 512KB of the external sram.
+### The internal 1KB scratchpad memory is still there, but is not used anymore.
+### The boot will now take a few seconds as it has to initialize 512KB instead of 1KB.
 
-## I've used the hx8kdemo project and modified it for my needs.
+### Please don't blame me about the implementation of the sram driver in verilog.
+### I am a beginner and the timings can probably be optimized a lot.
 
+### I've used the hx8kdemo project and modified it for my needs.
 ### Prerequisites:
 Latest versions of:
 - yosys 

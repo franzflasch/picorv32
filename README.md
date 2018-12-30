@@ -1,5 +1,5 @@
-# This is modified version which uses the external ram of the Olimex iCE40HX8K.
-# Please see picosoc/README.md for details.
+### This is modified version which uses the external ram of the Olimex iCE40HX8K.
+### Please see picosoc/README.md for details.
 
 PicoRV32 - A Size-Optimized RISC-V CPU
 ======================================
